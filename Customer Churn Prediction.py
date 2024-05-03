@@ -1,28 +1,17 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
 import pandas as pd
 
 df = pd.read_csv('CustomerChurn.csv')
 df.head()
 
-
-# In[2]:
-
-
 df.info()
 
 
-# In[3]:
+
 
 
 df["Churn"].value_counts()
 
 
-# In[4]:
 
 
 import matplotlib.pyplot as plt
@@ -40,13 +29,7 @@ for i, col in enumerate(numerical):
     ax.set_title(f"{col}")
 
 
-# In[5]:
-
-
 sns.boxplot(x='Churn', y='MonthlyCharges', data=df)
-
-
-# In[6]:
 
 
 cols = ['InternetService',"TechSupport","OnlineBackup","Contract"]
@@ -59,21 +42,13 @@ for i, col in enumerate(cols):
     ax.set_title(f"{col}")
 
 
-# In[7]:
-
-
 df['TotalCharges'] = df['TotalCharges'].apply(lambda x: pd.to_numeric(x, errors='coerce')).dropna()
-
-
-# In[8]:
 
 
 cat_features = df.drop(['customerID','TotalCharges','MonthlyCharges','SeniorCitizen','tenure'],axis=1)
 
 cat_features.head()
 
-
-# In[9]:
 
 
 from sklearn import preprocessing
@@ -83,14 +58,8 @@ df_cat = cat_features.apply(le.fit_transform)
 df_cat.head()
 
 
-# In[10]:
-
-
 num_features = df[['customerID','TotalCharges','MonthlyCharges','SeniorCitizen','tenure']]
 finaldf = pd.merge(num_features, df_cat, left_index=True, right_index=True)
-
-
-# In[11]:
 
 
 from sklearn.model_selection import train_test_split
@@ -103,8 +72,6 @@ y = finaldf['Churn']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
 
 
-# In[16]:
-
 
 from imblearn.over_sampling import SMOTE
 
@@ -113,13 +80,7 @@ X_smote, y_smote = oversample.fit_resample(X_train, y_train)
 X_train, y_train = X_smote, y_smote
 
 
-# In[17]:
-
-
 y_train.value_counts()
-
-
-# In[18]:
 
 
 from sklearn.ensemble import RandomForestClassifier
@@ -128,23 +89,8 @@ rf = RandomForestClassifier(random_state=46)
 rf.fit(X_train,y_train)
 
 
-# In[19]:
-
-
 from sklearn.metrics import accuracy_score
 
 preds = rf.predict(X_test)
 print(accuracy_score(preds,y_test))
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
 
